@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Result</title>
+    <style>
+        /* Your CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            /* color: #333; */
+            color: #FF0000;
+
+        }
+
+        pre {
+            white-space: pre-wrap;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: auto;
+        }
+
+        .copy-btn {
+            background-color: #FF0000;
+            color: #fff;
+            /* position: absolute;
+            top: 20px;
+            right: 20px; */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .copy-btn:hover {
+            background-color: #B30000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Conversion Result:</h1>
+        <button class="copy-btn" onclick="copyText()">Copy Text</button>
+        <pre id="result">{{ text }}</pre>
+        <!-- <button class="copy-btn" onclick="copyText()">Copy Text</button> -->
+    </div>
+
+    <script>
+        function copyText() {
+            const textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('result').innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Text copied to clipboard');
+        }
+    </script>
+</body>
+</html>

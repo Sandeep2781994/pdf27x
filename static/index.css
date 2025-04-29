@@ -1,0 +1,978 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    /* scroll-behavior: smooth; */
+}
+
+
+
+p{
+    font-weight: 300;
+    color: #111;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+
+
+
+
+/* Header Starts */
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 100px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.5s;
+
+}
+
+header.sticky{
+    background: #fff;
+    padding: 10px 100px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+header .logo{
+    color: #fff;
+    font-weight: 700;
+    font-size: 2rem;
+    text-decoration: none;
+}
+
+header.sticky .logo, header.sticky .navigation li a{
+    color: #111;
+}
+
+header.sticky .hamburger .bar, header.sticky .hamburger::before, header.sticky .hamburger::after{
+    background-color: #111;
+}
+
+
+
+header .logo span{
+    color: #E50916;
+}
+
+header .navigation{
+    position: relative;
+    display: flex;
+}
+
+header .navigation li{
+    list-style: none;
+    margin-left: 30px; 
+}
+
+header .navigation li a{
+    text-decoration: none;
+    color: #fff;
+    font-weight: 400;
+    transition: 0.5s;
+}
+
+header .navigation li a:hover{
+    color: #E50916;
+    /* text-decoration: underline #E50916; */
+}
+
+
+
+/* Header Ends */
+
+
+
+
+
+/* Section Starts */
+
+.banner{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background: url(img/Home-Page_picture.jpg); */
+    background: linear-gradient(to top, rgba(34, 31, 31, 1) 0%, rgba(34, 31, 31, 0.4) 60%), url(/static/img/Pdf-Banner.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+
+
+
+
+.banner .banner-name h2{
+    color: #fff;
+    /* font-size: clamp(30px, 4vw, 40px); */
+    font-size: 3em;
+}
+
+
+/* Animation */
+
+.banner .banner-name {
+    /* border: #E50916 2px solid; */
+    margin: 20px auto;
+}
+
+.banner .banner-name h2 {
+    margin: 0;
+    text-align: center;
+    overflow: hidden;
+    line-height: 1;
+}
+
+.banner .banner-name h2 span {
+    display: inline-block;
+    transform: translateY(100%);
+    animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    animation-delay: 0.5s; /* Delay the animation start */
+}
+
+@keyframes reveal {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+/* Animation */
+
+
+
+.banner .content{
+    max-width: 900px;
+    text-align: center;
+}
+
+/* Animation */
+
+.banner .fade-In{
+    opacity: 0;
+    animation: fadeIn 1.5s ease-in-out forwards;
+    animation-delay: 1.5s;
+}
+
+@keyframes fadeIn{
+    form {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+/* Animation */
+
+
+
+
+/* .banner .content h2{
+    font-size: 4em;
+    color: #fff;
+    font-size: clamp(30px, 4vw, 40px);
+} */
+
+.banner .content p{
+    font-size: 1em;
+    color: #fff;
+}
+
+.btn{
+    font-size: 1em;
+    font-weight: 300;
+    color: #fff;
+    background: #E50916;
+    display: inline-block;
+    padding: 10px 30px;
+    margin-top: 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: 0.5s;
+    border: none;
+    outline: none;
+
+}
+
+.btn:hover{
+    letter-spacing: 6px;
+}
+
+
+/* Section Ends */
+
+
+
+
+
+
+
+
+
+
+/*  Section Banner Starts */
+section{
+    padding: 100px;
+}
+
+.row{
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.row .col50{
+    position: relative;
+    width: 48%;
+    height: 30vh;
+}
+
+.row .col50 p{
+    text-align: justify;
+}
+
+.titleText{
+    color: #111;
+    font-size: 2em;
+    font-weight: 300;
+}
+
+.titleText span{
+    color: #E50916;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+.row .col50 .imgBx{
+    position: relative;
+    width: 100%;
+    /* min-height: 300px; */
+    height: 100%;
+    overflow: hidden;
+    box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.25), -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+}
+
+.row .col50 .imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+
+.row .col50 .imgBx img:hover{
+    transform: scale(1.2);
+
+}
+
+/*  Section Banner Ends */
+
+
+
+
+
+/* Section Menu Starts */
+.title{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.menu{
+    background-color: #dde1e7;
+}
+
+.menu .content{
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+
+
+/* Section Menu Ends */
+
+
+
+
+
+/* Section why choose PDF Starts */
+.tips{
+    /* background: url(img/wood_texture.jpg); */
+    background: linear-gradient(to bottom, rgba(34, 31, 31, 1) 0%, rgba(34, 31, 31, 0.1) 20%), url(/static/img/wood_texture.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.white .titleText,
+.white p{
+    color: #fff;
+}
+
+.tips .content{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-top: 40px;
+}
+
+.tips .content .box{
+    /* width: 340px;
+    margin: 20px; */
+    width: 320px;
+    margin: 15px;
+    padding: 40px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tips .content .box .imgBx{
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.tips .content .box .imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tips .content .box .text{
+    text-align: center;
+}
+
+.tips .content .box .text .paragraph{
+    display: table;
+}
+
+.tips .content .box .text .paragraph p{
+    /* text-align: center; */
+    vertical-align: middle;
+    display: table-cell;
+
+}
+
+
+.tips .content .box .paragraph{
+    width: 300px;
+    height: 200px;
+    padding: 10px;
+}
+
+.tips .content .box .text p{
+    color: #666;
+    font-style: italic;
+    text-align: justify;
+}
+
+.tips .content .box .text h3{
+    margin-top: 20px;
+    color: #111;
+    font-style: 1em;
+    font-weight: 600;
+    color: #E50916;
+}
+
+
+/* Section why choose PDF Ends */
+
+
+
+
+/*  Section contact Starts */
+
+
+.contact{
+    background: url(/static/img/Contact-PDF2.png);
+    background-size: cover;
+}
+
+
+.contact-form{
+    /* margin-bottom: 30px; */
+    background: #fff;
+    padding-bottom: 50px;
+}
+
+.contactForm{
+    padding: 75px 50px;
+    background: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
+    margin-top: 50px;
+
+}
+
+.contactForm h3{
+    color: #111;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.contactForm .inputBox{
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.contactForm .inputBox input,
+.contactForm .inputBox textarea{
+    width: 100%;
+    border: none;
+    padding: 10px;
+    color: #111;
+    outline: none;
+    font-size: 16px;
+    resize: none;
+    background: #f5f5f5;
+}
+
+/* .contactForm .inputBox input[type="submit"]{
+    font-size: 1em;
+    color: #fff;
+    background: #E50916;
+    display: inline-block;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: 0.5s;
+    max-width: 100px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+} */
+
+.contactForm .send{
+    font-size: 1em;
+    /* font-weight: 500; */
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+
+
+/*  Section contact Ends */
+
+
+
+
+/* Section copyright Starts */
+.copyrightText{
+    padding: 20px 30px;
+    /* border-top: 1px solid rgba(0, 0, 0, 0.2); */
+    text-align: center;
+    /* background: rgba(255, 255, 255, 0.2); */
+    /* border-radius: 20px; */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    /* border: 1px solid rgba(255, 255, 255, 0.3); */
+}
+
+.copyrightText p, .copyrightText i{
+    color: #333;
+}
+
+.copyrightText a{
+    color: #E50916;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+
+
+
+
+/* Section copyright Ends */
+
+
+
+
+
+
+
+
+
+.container {
+    max-width: max-content;
+    /* max-width: 900px; */
+    margin: 50px auto;
+    padding: 30px;
+    /* background-color: #fff; */
+    background-color: #dde1e7;
+    border-radius: 20px;
+    /* box-shadow: 0 5px 20px rgba(0,0,0,0.3); */
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);    
+}
+
+
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #E50916;
+    font-size: 2rem;
+    text-shadow: -3px -3px 7px rgba(255,255,255,0.4), 3px 3px 7px rgba(94,104,121,0.8);
+
+}
+
+.container h2{
+    color: #dde1e7;
+    text-shadow: -5px -5px 9px rgba(255,255,255,0.4), 5px 5px 9px rgba(94,104,121,0.8);
+    font-size: 2rem;
+    font-weight: 600 !important;
+}
+
+h2{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+form {
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+input[type="file"] {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    width: calc(100% - 20px);
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);    
+
+}
+
+input[type="file"]::file-selector-button {
+    box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+    border: none;
+    background-color: #dde1e7;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+input[type="submit"] {
+    background-color: #dde1e7;
+    color: #111;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    /* transition: background-color 0.3s; */
+    transition: 0.5s;
+    width: calc(100% - 20px);
+    box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+}
+
+input[type="number"] {
+    margin-bottom: 20px;
+    background-color: #dde1e7;
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);    
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: #dde1e7;
+    transform: scale(1.05);
+}
+
+input[type="text"], input[type="email"] {
+    background-color: #dde1e7;
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);    
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+
+#message {
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);    
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+
+
+.btn-group {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 10px;
+
+}
+
+
+
+.pdf-btn{
+    font-size: 1em;
+    /* background: #E50916; */
+    background-color: #dde1e7;
+    color: #111;
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+    transition: 0.5s;
+    /* border: #550000 1px solid; */
+}
+
+.pdf-btn:hover {
+    background-color: #dde1e7 !important;
+    letter-spacing: 3px;
+
+}
+
+
+/* Bookmark Form Start */
+
+#bookmarkPDF {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bookmark-label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+#bookmarkPDF input[type="file"], #bookmarkPDF input[type="text"], #bookmarkPDF input[type="number"] {
+    margin: 5px 0 20px 0;
+    padding: 10px;
+    width: calc(100% - 20px);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+#bookmarkPDF input[type="file"] {
+    padding: 3px;
+}
+
+.bookmark-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    transition: background-color 0.5s ease, transform 0.3s ease;
+    background-color: #dde1e7;
+    color: #111;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+
+}
+
+button:hover {
+    background-color: #dde1e7;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(1);
+}
+
+.field-group {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    input[type="file"], input[type="text"], input[type="number"] {
+        width: calc(100% - 10px);
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+/* Bookmark Form Ends */
+
+
+
+
+
+
+
+/* Responsive View Starts */
+
+
+@media (max-width: 991px){
+
+
+    header .logo{
+        font-size: 1.5em;
+    }
+
+    header, header.sticky{
+        padding: 10px 20px;
+    }
+
+    header .navigation{
+        display: none;
+    }
+
+    /* Hamburger Responsive Menu Starts */
+
+    .hamburger{
+        position: relative;
+        display: block;
+        width: 35px;
+        cursor: pointer;
+        appearance: none;
+        background: none;
+        outline: none;
+        border: none;
+    }
+
+    .hamburger .bar, .hamburger::after, .hamburger::before{
+        content: '';
+        display: block;
+        /* position: absolute; */
+        width: 100%;
+        height: 5px;
+        background-color: #fff;
+        margin: 6px 0;
+        transition: 0.5s;
+        border-radius: 100px;
+    }
+
+    .hamburger.is-active::before{
+        transform: rotate(-45deg) translate(-8px, 6px);
+    }
+
+    .hamburger.is-active::after{
+        transform: rotate(45deg) translate(-9.5px, -8px);
+    }
+
+    .hamburger.is-active .bar{
+        opacity: 0;
+    }
+
+
+    .mobile-nav{
+        position: fixed;
+        top: 0;
+        left: 100%;
+        width: 100%;
+        min-height: 100vh;
+        display: block;
+        z-index: 100;
+        background-color: #111;
+        padding-top: 120px;
+        transition: 0.5s;
+    }
+
+    .mobile-nav.is-active{
+        left: 0;
+    }
+
+
+    
+    .mobile-nav a{
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 400;
+        transition: 0.5s;
+        padding: 12px 16px;
+        margin: 0 auto 15px;
+        background-color: #1f103f;
+        cursor: pointer;
+    }
+
+    .mobile-nav a:hover{
+        color: #E50916;
+    }
+
+
+
+
+    /* Hamburger Responsive Menu Ends */
+
+
+    section{
+        padding: 20px;
+    }
+
+    .banner .content h2{
+        font-size: 2em;
+    }
+
+    .row{
+        flex-direction: column;
+    }
+
+    .row .col50{
+        position: relative;
+        width: 100%;
+    }
+
+    .row .col50 .imgBx{
+        height: 300px;
+        margin-top: 20px;
+    }
+
+    .menu .content{
+        margin-top: 30px;
+    }
+
+    .menu p {
+        text-align: justify;
+    }
+
+    .menu .content .box{
+        margin: 10px;
+    }
+
+    .menu .content .box .imgBx{
+        height: 260px;
+    }
+
+    .title{
+        text-align: justify;
+    }
+
+    .recipe{
+        margin-bottom: 20px;
+    }
+
+    .recipe .content {
+        flex-direction: column;
+        
+    }
+
+    .recipe .content .box{
+        width: 300px;
+        margin: 10px;
+    }
+
+    .tips .content .box{
+        margin: 10px;
+        padding: 20px;
+
+    }
+
+    .contactForm{
+        padding: 35px 40px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .btn-group{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-group .pdf-btn{
+        width: 50vw;
+        margin-bottom: 2vw;
+    }
+
+
+}
+
+
+
+@media (min-width: 991px){
+    .mobile-nav{
+        display: none;
+    }
+
+    .hamburger{
+        display: none;
+    }
+}
+
+
+
+@media screen and (min-width: 350px) and (max-width: 480px) {
+    
+    .recipe .content{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    
+
+}
+
+
+/* Responsive View Ends */

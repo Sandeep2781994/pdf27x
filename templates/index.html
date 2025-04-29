@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="theme-color" content="#FF5633"> -->
+    <link rel="icon" type="image/png" href="/static/img/PDF-Logo-removebg-preview.png">
+    <link rel="stylesheet" href="/static/index.css">
+    <script>
+        function downloadOcrPdf() {
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = '/download';
+            document.body.appendChild(iframe);
+        }
+    </script>
+    <title>PDF 27x</title>
+</head>
+<body>
+
+    <!-- Header Starts -->
+    <header>
+        <a href="#" class="logo">PDF<span> 27x</span></a>
+        <ul class="navigation">
+            <li><a href="#banner">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#menu">Tools</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="hamburger">
+            <div class="bar"></div>
+        </button>
+    </header>
+
+    <nav class="mobile-nav">
+        <a href="#banner">Home</a>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#menu">Tools</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+
+    
+  
+
+    <!-- Header Ends -->
+
+
+    <!-- Section Banner Starts -->
+    <section class="banner" id="banner">
+        <div class="content banner-name">
+            <h2>
+                <span>Efficient and precise PDF toolkit!</span>
+            </h2>
+        </div>
+
+        <div class="content fade-In">
+            <!-- <h2>Efficient and precise PDF toolkit!</h2> -->
+            <p>Unlocking the Full Potential of Your PDF Documents: Seamlessly Merge, Convert, Extract, Rotate, and Compress with Ease, Revolutionizing How You Manage and Interact with Your Digital Files.</p>
+            <a class="btn" href="#menu">Our Tools</a>
+        </div>
+    </section>
+    
+    <!-- Section Banner Ends -->
+
+
+
+    <!-- Section Banner Starts -->
+    <section class="about" id="about" style="height: 50vh !important;">
+        <div class="row">
+            <div class="col50">
+                <h2 class="titleText"><span>A</span>bout Us</h2>
+                <p>
+                    At PDF 27x, we're dedicated to making your PDF tasks effortless. With our user-friendly online tools, you can merge, convert, extract, and compress PDFs with ease. Simplify your document management and get more done in less time with PDF 27x.<br><br>
+                    We strive to provide reliable solutions that streamline your workflow, ensuring that your PDF editing experience is seamless and efficient.
+                </p>
+            </div>
+            <div class="col50">
+                <div class="imgBx">
+                    <img src="/static/img/Pdf-Banner.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Section Banner Ends -->
+
+
+
+
+
+    <!-- Section Menu Starts -->
+    <section class="menu" id="menu">
+        <div class="title">
+            <h2 class="titleText">Our <span>T</span>ools</h2>
+            <p>Explore our comprehensive suite of PDF tools designed to simplify document management and enhance productivity.</p>
+        </div>
+
+        <div class="container">
+            <h1>PDF 27x</h1>
+            <h2>Free and easy to use online PDF tools</h2>
+    
+            <div class="btn-group">
+                <div><button class="pdf-btn" onclick="showMergeForm()">Merge PDF</button></div>
+                <div><button class="pdf-btn" onclick="showConvertForm()">PDF to Docx</button></div>
+                <div><button class="pdf-btn" onclick="showExtractForm()">Extract Pages</button></div>
+                <div><button class="pdf-btn" onclick="showRotateForm()">Rotate PDF</button></div>
+                <div><button class="pdf-btn" onclick="showOCRForm()">OCR PDF</button></div>
+                <div><button class="pdf-btn" onclick="showBookmarkForm()">PDF Bookmark</button></div>
+                <div><button class="pdf-btn" onclick="showModifyForm()">PDF Modify</button></div>
+                <div><button class="pdf-btn" onclick="showCompressForm()">PDF Compress</button></div>
+
+
+            </div>
+    
+            <!-- Merge PDF Form -->
+            <form action="/merge" method="post" enctype="multipart/form-data" id="mergeForm" style="display: none;">
+                <input type="file" name="files[]" multiple accept=".pdf">
+                <input type="submit" value="Merge Files">
+            </form>
+    
+            <!-- Convert to Text Form -->
+            <form action="/convert" method="post" enctype="multipart/form-data" id="convertForm" style="display: none;">
+                <label for="file">Select PDF:</label>
+                <input type="file" name="file" id="file" accept=".pdf" required><br><br>
+                <div id="loadingWord" style="display: none;">Performing conversion...</div>
+                <input type="submit" value="Convert PDF">
+            </form>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+
+
+    
+            <!-- Extract Pages Form -->
+            <form action="/extract" method="post" enctype="multipart/form-data" id="extractForm" style="display: none;">
+                <input type="file" name="file" accept=".pdf">
+                <label for="start_page">Start Page:</label>
+                <input type="number" name="start_page" id="start_page">
+                <label for="end_page">End Page:</label>
+                <input type="number" name="end_page" id="end_page">
+                <input type="submit" value="Extract Pages">
+            </form>
+
+
+    
+            <!-- Rotate PDF Form -->
+            <form action="/rotate" method="post" enctype="multipart/form-data" id="rotateForm" style="display: none;">
+                <label for="file">Select PDF:</label>
+                <input type="file" name="file" id="file" accept=".pdf" required><br><br>
+        
+                <label for="rotation_angle">Rotation Angle (degrees):</label>
+                <input type="number" name="rotation_angle" id="rotation_angle" value="90" required><br><br>
+        
+                <label for="pages">Pages to rotate (comma-separated, leave blank for all pages):</label>
+                <input type="text" name="pages" id="pages"><br><br>
+        
+                <input type="submit" value="Rotate PDF">
+            </form>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+
+
+
+
+            <!-- New OCR PDF Form Start -->
+            <form id="uploadForm" action="/process" method="post" enctype="multipart/form-data" style="display: none;">
+                <h1>OCR PDF Fast Converter</h1>
+                <input type="file" id="pdfFile" name="file">
+                <button type="button" class="bookmark-button" onclick="uploadFile()">Upload & OCR</button>
+                <div id="loader"></div>
+                <p id="status"></p>
+            </form>
+
+            <style>
+                .bookmark-button {
+                    margin-top: 20px;
+                    padding: 12px 20px;
+                    transition: background-color 0.5s ease, transform 0.3s ease;
+                    background-color: #dde1e7;
+                    color: #111;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 18px;
+                    cursor: pointer;
+                    box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+
+                }
+
+
+
+                #loader {
+                    display: none;
+                    margin-top: 20px;
+                    border: 16px solid #f3f3f3;
+                    border-radius: 50%;
+                    border-top: 16px solid #3498db;
+                    width: 50px;
+                    height: 50px;
+                    animation: spin 2s linear infinite;
+                }
+                @keyframes spin { 100% { transform: rotate(360deg); } }
+            </style>
+
+
+            <script>
+                async function uploadFile() {
+                    const fileInput = document.getElementById('pdfFile');
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+
+                    document.getElementById('status').innerText = 'Processing...';
+                    document.getElementById('loader').style.display = 'block';
+
+                    const response = await fetch('/process', { method: 'POST', body: formData });
+                    const data = await response.json();
+
+                    const checkStatus = setInterval(async () => {
+                        const res = await fetch(`/status/${data.task_id}`);
+                        const statusData = await res.json();
+                        if (statusData.status === 'done') {
+                            clearInterval(checkStatus);
+                            document.getElementById('loader').style.display = 'none';
+                            document.getElementById('status').innerHTML = `<a href="/download/${data.task_id}">Download Processed PDF</a>`;
+                        } else if (statusData.status === 'timeout' || statusData.status === 'error') {
+                            clearInterval(checkStatus);
+                            document.getElementById('loader').style.display = 'none';
+                            document.getElementById('status').innerText = 'Processing failed or timed out.';
+                        }
+                    }, 2000);
+                }
+            </script>
+
+        
+
+
+
+
+
+
+            
+            
+            <!-- New OCR PDF Form Ends -->
+        
+
+
+
+
+
+
+
+
+
+
+            <!-- PDF Bookmark Form -->
+            <form id="bookmarkPDF" action="/add_bookmarks" method="post" enctype="multipart/form-data" style="display: none;">
+                <label class="bookmark-label" for="pdf">Choose PDF file:</label>
+                <input class="bookmark-input" type="file" id="pdf" name="pdf" required>
+                <br>
+                <div id="bookmark-fields">
+                    <div class="field-group">
+                        <label class="bookmark-label" for="title_0">Title 1:</label>
+                        <input type="text" id="title_0" name="title_0" required>
+                    </div>
+                    <div class="field-group">
+                        <label class="bookmark-label" for="page_0">Page 1:</label>
+                        <input type="number" id="page_0" name="page_0" required min="1">
+                    </div>
+                </div>
+                <br>
+                <input type="hidden" id="num_bookmarks" name="num_bookmarks" value="1">
+                <button class="bookmark-button" type="button" onclick="addFieldAndUpdateCount()">Add Bookmark</button>
+                <br>
+                <button class="bookmark-button" type="submit">Upload and Save Bookmarks</button>
+            </form>
+
+
+
+
+
+
+            <!-- Modify PDF Form -->
+            <form id="PdfModify" action="/upload" method="post" enctype="multipart/form-data" style="display: none;">
+                <input type="file" id="pdfInput" accept="application/pdf">
+                <!-- <button id="submitButton">View PDF</button> -->
+                <input id="submitButton" type="submit" value="Modify PDF">
+            </form>
+
+
+            <!-- Modify PDF Script -->
+            <script>
+                let fileURL = null; // Store the PDF URL globally
+            
+                document.getElementById('pdfInput').addEventListener('change', function(event) {
+                  const file = event.target.files[0];
+                  if (file && file.type === 'application/pdf') {
+                    fileURL = URL.createObjectURL(file);
+            
+                    // Show the Submit button
+                    document.getElementById('submitButton').style.display = 'inline-block';
+                  } else {
+                    alert('Please upload a valid PDF file.');
+                  }
+                });
+            
+                document.getElementById('submitButton').addEventListener('click', function() {
+                  if (fileURL) {
+                    // Create a temporary link element
+                    const tempLink = document.createElement('a');
+                    tempLink.href = fileURL;
+                    tempLink.target = '_blank'; // Open in a new tab
+                    tempLink.rel = 'noopener noreferrer'; // Security recommendation
+                    tempLink.click(); // Programmatically trigger the click
+            
+                    // Clean up the URL after use
+                    setTimeout(() => URL.revokeObjectURL(fileURL), 100);
+                  }
+                });
+            </script>
+            
+
+
+
+
+
+            <!-- Compress PDF Form -->
+            <form id="PdfCompress" action="/compress_pdf" method="post" enctype="multipart/form-data" style="display: none;">
+                <h1>Upload PDF to Compress</h1>
+                <form method="post" enctype="multipart/form-data">
+                  <input type="file" name="pdf_file" accept="application/pdf" required>
+                  <label for="compression_level">Select Compression Level:</label>
+                  <select name="compression_level" id="compression_level">
+                    <option value="screen">Low (Smallest Size)</option>
+                    <option value="ebook" selected>Medium</option>
+                    <option value="printer">High</option>
+                    <option value="prepress">Very High</option>
+                  </select>
+                  <input type="submit" value="Compress">
+                </form>            
+            </form>
+
+
+
+
+
+
+
+        </div>
+        
+        
+    </section>
+
+
+    <!-- Section Menu Ends -->
+
+
+    <!-- Section why choose pdf Starts -->
+        <section class="tips" id="Tips">
+            <div class="title white">
+                <h2 class="titleText">Why Choose<span>PDF</span>27x ?</h2>
+                <p>Choose PDF27x for its user-friendly interface, efficient tools, and reliable performance, making it the ideal choice for all your PDF editing needs.</p>
+            </div>
+            <div class="content">
+                <div class="box">
+                    <div class="imgBx">
+                        <img src="/static/img/PDF-Merge.png" alt="">
+                    </div>
+                    <div class="text">
+                        <div class="paragraph">
+                            <p>PDF Merge is a process of combining multiple PDF files into a single PDF document. It's a useful feature when you have multiple PDF files that you want to consolidate into one, making it easier to manage and share documents.</p>
+                        </div>
+                        <h3>PDF Merge</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imgBx">
+                        <img src="/static/img/PDF-Convert.png" alt="">
+                    </div>
+                    <div class="text">
+                        <div class="paragraph">
+                            <p>PDF Convert refers to the process of transforming files from other formats into PDF (Portable Document Format). This conversion is commonly used to create universally compatible and easily shareable documents.</p>
+                        </div>
+                        <h3>PDF Convert</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imgBx">
+                        <img src="/static/img/PDF-Extract.png" alt="">
+                    </div>
+                    <div class="text">
+                        <div class="paragraph">
+                            <p>PDF Extract provides users with the flexibility to extract and utilize specific content from PDF documents, contributing to efficient document management and content reuse.</p>
+                        </div>
+                        <h3>PDF Extract</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imgBx">
+                        <img src="/static/img/PDF-rotate.png" alt="">
+                    </div>
+                    <div class="text">
+                        <div class="paragraph">
+                            <p>PDF Rotate allows users to adjust the orientation of individual pages or the entire document. This can be useful for correcting pages that are displayed sideways or upside down.</p>
+                        </div>
+                        <h3>PDF Rotate</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <!-- Section why choose pdf Ends -->
+
+
+
+
+        <!-- Section contact Starts -->
+
+        <div class="contact-form">
+            <section class="contact" id="contact">
+                <div class="title">
+                    <h2 class="titleText"><span>C</span>ontact Us</h2>
+                    <p>Questions or feedback? Reach out to us through the contact form – we're here to assist you!</p>
+                </div>
+                <div class="contactForm">
+                    <form name="contact-us">
+                        <h3><strong>Get In Touch</strong></h3>
+                        <div class="inputBox">
+                            <input type="text" name="name" id="name" placeholder="Name" required>
+                        </div>
+                        <div class="inputBox">
+                            <input type="email" name="email" id="email" placeholder="Email" required>
+                        </div>
+                        <div class="inputBox">
+                            <input type="text" name="phone" id="phone" placeholder="Contact No." required>
+                        </div>
+                        <div class="inputBox">
+                            <textarea name="message" id="message" placeholder="Message"></textarea>
+                        </div>
+                        <div class="inputBox">
+                            <button class="btn send">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+    
+
+        </div>
+
+
+    <!-- Section contact Ends -->
+
+    
+    
+    <!-- Section copyright Starts -->
+        <div class="copyrightText">
+            <p>Copyright <i class="fa-regular fa-copyright"></i> &copy; 2024 <a href="#">PDF 27x</a>. All Right Reserved</p>
+            <p>Created By <a href="#">Sandeep Nandi</a></p>
+        </div>
+    
+    <!-- Section copyright Ends -->
+    
+    
+    
+
+
+    <!-- ocr pdf script -->
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function () {
+            document.getElementById('loadingMessage').style.display = 'block';
+        });
+    </script>
+
+
+    <script>
+        document.getElementById('convertForm').addEventListener('submit', function () {
+            document.getElementById('loadingWord').style.display = 'block';
+        });
+    </script>
+
+
+    
+
+    <script>
+        function showMergeForm() {
+            hideAllForms();
+            document.getElementById("mergeForm").style.display = "block";
+        }
+
+        function showConvertForm() {
+            hideAllForms();
+            document.getElementById("convertForm").style.display = "block";
+        }
+
+        function showExtractForm() {
+            hideAllForms();
+            document.getElementById("extractForm").style.display = "block";
+        }
+
+        function showRotateForm() {
+            hideAllForms();
+            document.getElementById("rotateForm").style.display = "block";
+        }
+
+
+        function showOCRForm() {
+            hideAllForms();
+            document.getElementById("uploadForm").style.display = "block";
+        }
+
+        function showBookmarkForm() {
+            hideAllForms();
+            document.getElementById("bookmarkPDF").style.display = "block";
+        }
+
+
+        function showModifyForm() {
+            hideAllForms();
+            document.getElementById("PdfModify").style.display = "block";
+        }
+
+
+        
+
+        function showCompressForm() {
+            hideAllForms();
+            document.getElementById("PdfCompress").style.display = "block";
+        }
+
+
+
+
+
+
+
+
+        
+
+        
+
+
+
+
+        
+
+
+
+
+
+        function hideAllForms() {
+            document.getElementById("mergeForm").style.display = "none";
+            document.getElementById("convertForm").style.display = "none";
+            document.getElementById("extractForm").style.display = "none";
+            document.getElementById("rotateForm").style.display = "none";
+            document.getElementById("uploadForm").style.display = "none";
+            document.getElementById("bookmarkPDF").style.display = "none";
+            document.getElementById("PdfModify").style.display = "none";
+            document.getElementById("PdfCompress").style.display = "none";
+
+
+        }
+
+       
+
+
+        // Contact Us java Script using google spreadsheet
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxACoGALq0FpgiWpRP954X8e4Q4EO6YUj5URHLuUi-5hzz7zr5BVfzey3CtFoTh7C5Q/exec'
+        const form = document.forms['contact-us']
+      
+        form.addEventListener('submit', e => {
+          e.preventDefault()
+          fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                form.reset()
+                alert('Message Sent Successfully!')
+            })
+            .catch(error => console.error('Error!', error.message))
+        })
+
+
+
+
+        
+
+        window.addEventListener('scroll', function(){
+            const header = document.querySelector('header');
+            header.classList.toggle("sticky", window.scrollY > 0);
+        });
+
+
+        // For Menu Icon change on click
+        const menu_btn = document.querySelector('.hamburger');
+        const mobile_menu = document.querySelector('.mobile-nav');
+
+        menu_btn.addEventListener('click', function () {
+            menu_btn.classList.toggle('is-active');
+            mobile_menu.classList.toggle('is-active');
+        });
+
+
+
+        // Below JavaScript code adds functionality to close the mobile navigation bar (navbar) 
+        // when a user clicks on a link inside the mobile menu.
+
+        // This function, closeMobileNavbar, removes the 'is-active' class from both the menu_btn (hamburger icon) and mobile_menu elements.
+        // The 'is-active' class is responsible for showing/hiding the mobile menu, so removing it closes the menu.
+        function closeMobileNavbar() {
+            menu_btn.classList.remove('is-active');
+            mobile_menu.classList.remove('is-active');
+        };
+
+        // Add event listener to each mobile menu link
+        const mobileLinks = document.querySelectorAll('.mobile-nav a');
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileNavbar);
+        });
+
+
+
+
+
+
+        // PDF Bookmark Script
+        function addBookmarkField() {
+            const container = document.getElementById('bookmark-fields');
+            const index = container.children.length / 2;
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'field-group';
+            
+            const titleLabel = document.createElement('label');
+            titleLabel.htmlFor = `title_${index}`;
+            titleLabel.innerText = `Title ${index + 1}:`;
+            
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.id = `title_${index}`;
+            titleInput.name = `title_${index}`;
+            titleInput.required = true;
+
+            titleDiv.appendChild(titleLabel);
+            titleDiv.appendChild(titleInput);
+            
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'field-group';
+
+            const pageLabel = document.createElement('label');
+            pageLabel.htmlFor = `page_${index}`;
+            pageLabel.innerText = `Page ${index + 1}:`;
+            
+            const pageInput = document.createElement('input');
+            pageInput.type = 'number';
+            pageInput.id = `page_${index}`;
+            pageInput.name = `page_${index}`;
+            pageInput.required = true;
+            pageInput.min = 1;
+
+            pageDiv.appendChild(pageLabel);
+            pageDiv.appendChild(pageInput);
+
+            container.appendChild(titleDiv);
+            container.appendChild(pageDiv);
+        }
+
+        function updateBookmarkCount() {
+            const container = document.getElementById('bookmark-fields');
+            const numBookmarks = container.children.length / 2;
+            document.getElementById('num_bookmarks').value = numBookmarks;
+        }
+        
+        function addFieldAndUpdateCount() {
+            addBookmarkField();
+            updateBookmarkCount();
+        }
+
+        window.onload = function() {
+            updateBookmarkCount();
+        }
+
+
+
+
+    </script>
+</body>
+</html>
