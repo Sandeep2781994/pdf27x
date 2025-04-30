@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, render_template, request, send_file, redirect, url_for, flash, render_template, jsonify
 from pdf_tools import merge_pdf, pdf_to_word, extract_pages, rotate_pdf, ocr_pdf, add_bookmark_to_pdf
 import os, ocrmypdf, io, tempfile, subprocess
@@ -14,26 +12,13 @@ OUTPUT_FOLDER = "outputs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-
-
-app = Flask(__name__, template_folder='templates')
-app = Flask(__name__, static_url_path='/static')
-
-
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+# Initialize Flask app
+app = Flask(__name__, template_folder='templates', static_url_path='/static')
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-@app.route('/')
-def upload_file():
-    return render_template('index.html')
-
 
 
 @app.route('/merge', methods=['POST'])
@@ -43,9 +28,6 @@ def merge():
     files = request.files.getlist('files[]')
     merged_pdf = merge_pdf(files)
     return send_file(merged_pdf, as_attachment=True, mimetype='application/pdf', download_name='merged.pdf')
-
-
-
 
 @app.route('/convert', methods=['POST'])
 def convert():
@@ -67,12 +49,6 @@ def convert():
 
         return send_file(word_path, as_attachment=True, download_name=os.path.basename(word_path))
 
-
-
-
-
-
-
 @app.route('/extract', methods=['POST'])
 def extract():
     file = request.files['file']
@@ -80,8 +56,6 @@ def extract():
     end_page = int(request.form['end_page'])
     extracted_pdf = extract_pages(file, start_page, end_page)
     return send_file(extracted_pdf, as_attachment=True, mimetype='application/pdf', download_name='extracted.pdf')
-
-
 
 @app.route('/rotate', methods=['POST'])
 def rotate():
@@ -100,59 +74,6 @@ def rotate():
 
     rotated_pdf = rotate_pdf(file, rotation_angle, pages)
     return send_file(rotated_pdf, as_attachment=True, mimetype='application/pdf', download_name='rotated.pdf')
-
-
-
-
-
-# Bookmark PDF
-
-
-PDF_SETTINGS = {
-    "screen": "/screen",  # Lowest quality, smallest size
-    "ebook": "/ebook",    # Medium quality
-    "printer": "/printer", # Higher quality
-    "prepress": "/prepress", # High quality, larger size
-}
-
-
-
-@app.route('/add_bookmarks', methods=['POST'])
-def add_bookmarks():
-    if 'pdf' not in request.files:
-        return "No file part", 400
-    
-    file = request.files['pdf']
-    if file.filename == '':
-        return "No selected file", 400
-    
-    if file:
-        try:
-            bookmarks = []
-            num_bookmarks = int(request.form.get('num_bookmarks'))
-            for i in range(num_bookmarks):
-                title = request.form.get(f'title_{i}')
-                page_num = request.form.get(f'page_{i}')
-                if not title or not page_num:
-                    return "Missing title or page number", 400
-                bookmarks.append((title, int(page_num)))
-            
-            input_pdf = io.BytesIO(file.read())
-            output_pdf = add_bookmark_to_pdf(input_pdf, bookmarks)
-            
-            return send_file(output_pdf, download_name='bookmarked.pdf', as_attachment=True)
-        except ValueError:
-            return "Invalid input data", 400
-
-
-
-
-
-
-
-
-
-
 
 
 # Compress PDF
@@ -201,10 +122,8 @@ def compress_pdf():
     return render_template("index.html")
 
 
+# OCR Processing
 
-
-
-# New ocr
 processing_status = {}
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -231,12 +150,6 @@ def run_ocr(input_path, output_path, task_id):
     except subprocess.CalledProcessError as e:
         processing_status[task_id] = "error"
         logging.error(f"OCR failed for task {task_id}: {e}")
-
-
-# @app.route("/")
-# def index():
-#     return render_template("index.html")
-
 
 
 @app.route("/process", methods=["POST"])
@@ -267,15 +180,5 @@ def download(task_id):
     return "File not found.", 404
 
 
-if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
