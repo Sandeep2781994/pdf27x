@@ -21,4 +21,4 @@ RUN pip install --no-cache-dir -r requirements-new.txt
 EXPOSE 5000
 
 # Start the app (change this if needed)
-CMD ["python", "app.py"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
