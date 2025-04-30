@@ -133,7 +133,7 @@ def run_ocr(input_path, output_path, task_id):
         logging.info(f"Starting OCR for task {task_id}")
         subprocess.run([
             "ocrmypdf",
-            "--skip-text",
+            "--force-ocr",
             "--fast-web-view", "5",  # Specify 5MB for fast web view
             "--jobs", "4",
             "--optimize", "0",
