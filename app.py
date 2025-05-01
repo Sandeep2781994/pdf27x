@@ -122,34 +122,43 @@ def compress_pdf():
     return render_template("index.html")
 
 
+
+
+
 # OCR Processing
 
 processing_status = {}
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def run_ocr(input_path, output_path, task_id):
-    """Run OCRmyPDF with corrected arguments and logging."""
+    """Run OCRmyPDF with optimized arguments and logging."""
     try:
         logging.info(f"Starting OCR for task {task_id}")
-        subprocess.run([
+
+        result = subprocess.run([
             "ocrmypdf",
-            "--force-ocr",
-            "--fast-web-view", "5",  # Specify 5MB for fast web view
-            "--jobs", "4",
-            "--optimize", "0",
-            "--tesseract-timeout", "1200",
-            "--output-type", "pdf",
+            "--force-ocr",                # Force OCR on all pages (no corruption from skip-text)
+            "--fast-web-view",           # Enable fast web viewing (linearized PDF)
+            "--jobs", "2",               # Adjust to your CPU limits; '2' is safer on shared CPUs
+            "--optimize", "0",           # No lossy recompression
+            "--tesseract-timeout", "300",# Lower timeout to avoid unnecessary hangs
             input_path,
             output_path
-        ], check=True, timeout=1800)
+        ], check=True, timeout=900)     # 15 min timeout should be enough for most files
+
         processing_status[task_id] = "done"
         logging.info(f"OCR completed for task {task_id}")
+
     except subprocess.TimeoutExpired:
         processing_status[task_id] = "timeout"
         logging.error(f"OCR timed out for task {task_id}")
+
     except subprocess.CalledProcessError as e:
         processing_status[task_id] = "error"
         logging.error(f"OCR failed for task {task_id}: {e}")
+
+
+
 
 
 @app.route("/process", methods=["POST"])
