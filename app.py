@@ -132,22 +132,22 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 def run_ocr(input_path, output_path, task_id):
-    """Run OCRmyPDF with performance-tuned settings and logging."""
+    """Run OCRmyPDF with resource-optimized settings and logging."""
     try:
         logging.info(f"Starting OCR for task {task_id}")
 
         result = subprocess.run([
             "ocrmypdf",
             "--force-ocr",
-            # "--fast-web-view", "5",          
-            "--jobs", "4",
-            # "--optimize", "1",
+            "--jobs", "1",                      # Prevent memory overload
+            "--oversample", "200",              # Lower DPI rendering
             "--tesseract-timeout", "180",
             "--jpeg-quality", "70",
             "--pdfa-image-compression", "jpeg",
-            "--skip-big", "20",
-            # "--clean",
-            # "--remove-background",  # Temporarily disabled due to NotImplementedError
+            "--skip-big", "20",                 # Skip images over 20MB
+            # "--clean",                         # Optional: remove if crashing
+            # "--optimize", "1",                 # Optional: skip to reduce CPU/RAM
+            # "--fast-web-view", "5",            # Optional: remove if crashing
             input_path,
             output_path
         ], check=True, timeout=600)
