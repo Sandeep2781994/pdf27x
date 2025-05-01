@@ -139,14 +139,14 @@ def run_ocr(input_path, output_path, task_id):
         result = subprocess.run([
             "ocrmypdf",
             "--force-ocr",
-            "--fast-web-view", "5",          
+            # "--fast-web-view", "5",          
             "--jobs", "4",
-            "--optimize", "1",
+            # "--optimize", "1",
             "--tesseract-timeout", "180",
             "--jpeg-quality", "70",
             "--pdfa-image-compression", "jpeg",
             "--skip-big", "20",
-            "--clean",
+            # "--clean",
             # "--remove-background",  # Temporarily disabled due to NotImplementedError
             input_path,
             output_path
