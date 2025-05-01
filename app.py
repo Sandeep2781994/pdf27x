@@ -147,7 +147,7 @@ def run_ocr(input_path, output_path, task_id):
             "--pdfa-image-compression", "jpeg",
             "--skip-big", "20",
             "--clean",
-            "--remove-background",
+            # "--remove-background",  # Temporarily disabled due to NotImplementedError
             input_path,
             output_path
         ], check=True, timeout=600)
