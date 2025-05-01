@@ -130,21 +130,27 @@ def compress_pdf():
 processing_status = {}
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 def run_ocr(input_path, output_path, task_id):
-    """Run OCRmyPDF with optimized arguments and logging."""
+    """Run OCRmyPDF with performance-tuned settings and logging."""
     try:
         logging.info(f"Starting OCR for task {task_id}")
 
         result = subprocess.run([
             "ocrmypdf",
-            "--force-ocr",                # Force OCR on all pages (no corruption from skip-text)
-            "--fast-web-view",           # Enable fast web viewing (linearized PDF)
-            "--jobs", "2",               # Adjust to your CPU limits; '2' is safer on shared CPUs
-            "--optimize", "0",           # No lossy recompression
-            "--tesseract-timeout", "300",# Lower timeout to avoid unnecessary hangs
+            "--force-ocr",                     # Force OCR regardless of existing text
+            "--fast-web-view",                # Optimize for web viewing
+            "--jobs", "4",                    # Use more cores if available
+            "--optimize", "1",                # Slight lossy compression (faster + smaller PDF)
+            "--tesseract-timeout", "180",     # Shorter timeout to avoid hanging
+            "--jpeg-quality", "70",           # Balance size and quality
+            "--pdfa-image-compression", "jpeg",  # Use JPEG instead of lossless for speed
+            "--skip-big", "20",               # Skip images larger than 20MP
+            "--clean",                        # Remove minor imperfections
+            "--remove-background",            # Improve readability and performance
             input_path,
             output_path
-        ], check=True, timeout=900)     # 15 min timeout should be enough for most files
+        ], check=True, timeout=600)           # Reduce global timeout to 10 min
 
         processing_status[task_id] = "done"
         logging.info(f"OCR completed for task {task_id}")
@@ -156,6 +162,7 @@ def run_ocr(input_path, output_path, task_id):
     except subprocess.CalledProcessError as e:
         processing_status[task_id] = "error"
         logging.error(f"OCR failed for task {task_id}: {e}")
+
 
 
 
