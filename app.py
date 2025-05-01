@@ -138,19 +138,19 @@ def run_ocr(input_path, output_path, task_id):
 
         result = subprocess.run([
             "ocrmypdf",
-            "--force-ocr",                     # Force OCR regardless of existing text
-            "--fast-web-view",                # Optimize for web viewing
-            "--jobs", "4",                    # Use more cores if available
-            "--optimize", "1",                # Slight lossy compression (faster + smaller PDF)
-            "--tesseract-timeout", "180",     # Shorter timeout to avoid hanging
-            "--jpeg-quality", "70",           # Balance size and quality
-            "--pdfa-image-compression", "jpeg",  # Use JPEG instead of lossless for speed
-            "--skip-big", "20",               # Skip images larger than 20MP
-            "--clean",                        # Remove minor imperfections
-            "--remove-background",            # Improve readability and performance
+            "--force-ocr",
+            "--fast-web-view", "5",          
+            "--jobs", "4",
+            "--optimize", "1",
+            "--tesseract-timeout", "180",
+            "--jpeg-quality", "70",
+            "--pdfa-image-compression", "jpeg",
+            "--skip-big", "20",
+            "--clean",
+            "--remove-background",
             input_path,
             output_path
-        ], check=True, timeout=600)           # Reduce global timeout to 10 min
+        ], check=True, timeout=600)
 
         processing_status[task_id] = "done"
         logging.info(f"OCR completed for task {task_id}")
