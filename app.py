@@ -152,7 +152,7 @@ def run_ocr(input_path, output_path, task_id):
             # "--fast-web-view", "5",            # Optional: remove if crashing
             input_path,
             output_path
-        ], check=True, timeout=600)
+        ], check=True, timeout=900)
 
         processing_status[task_id] = "done"
         logging.info(f"OCR completed for task {task_id}")
