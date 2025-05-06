@@ -138,13 +138,15 @@ def run_ocr(input_path, output_path, task_id):
 
         result = subprocess.run([
             "ocrmypdf",
-            "--force-ocr",
+            # "--force-ocr",
             "--jobs", "1",                      # Prevent memory overload
             "--oversample", "200",              # Lower DPI rendering
-            "--tesseract-timeout", "180",
+            "--tesseract-timeout", "90",
             "--jpeg-quality", "70",
             "--pdfa-image-compression", "jpeg",
             "--skip-big", "20",                 # Skip images over 20MB
+            "--skip-text",
+            "--oversample", "200",
             # "--clean",                         # Optional: remove if crashing
             # "--optimize", "1",                 # Optional: skip to reduce CPU/RAM
             # "--fast-web-view", "5",            # Optional: remove if crashing
