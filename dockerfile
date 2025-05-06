@@ -1,18 +1,30 @@
 # Base image with Python
 FROM python:3.10-slim
 
-# Install system dependencies for OCR
+# Install build dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    ghostscript \
     poppler-utils \
     unpaper \
+    wget \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Ghostscript 10.03.0 from source
+RUN wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10030/ghostscript-10.03.0.tar.gz && \
+    tar -xvzf ghostscript-10.03.0.tar.gz && \
+    cd ghostscript-10.03.0 && \
+    ./configure && \
+    make && make install && \
+    cd .. && rm -rf ghostscript-10.03.0*
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy all files to the container
+# Copy app files to the container
 COPY . .
 
 # Install Python dependencies
