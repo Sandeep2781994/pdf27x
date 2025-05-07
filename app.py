@@ -127,44 +127,55 @@ def compress_pdf():
 
 # OCR Processing
 
-processing_status = {}
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+import os
+import tempfile
+import shutil
+from flask import Flask, request, send_file, jsonify
+import subprocess
 
+app = Flask(__name__)
 
-def run_ocr(input_path, output_path, task_id):
-    """Run OCRmyPDF with resource-optimized settings and logging."""
-    try:
-        logging.info(f"Starting OCR for task {task_id}")
+@app.route('/ocr', methods=['POST'])
+def ocr_pdf():
+    file = request.files['pdf']
+    if not file:
+        return jsonify({'error': 'No PDF uploaded'}), 400
 
-        result = subprocess.run([
-            "ocrmypdf",
-            # "--force-ocr",
-            "--jobs", "1",                      # Prevent memory overload
-            "--oversample", "200",              # Lower DPI rendering
-            "--tesseract-timeout", "90",
-            "--jpeg-quality", "70",
-            "--pdfa-image-compression", "jpeg",
-            "--skip-big", "20",                 # Skip images over 20MB
-            "--skip-text",
-            "--oversample", "200",
-            # "--clean",                         # Optional: remove if crashing
-            # "--optimize", "1",                 # Optional: skip to reduce CPU/RAM
-            # "--fast-web-view", "5",            # Optional: remove if crashing
-            input_path,
-            output_path
-        ], check=True, timeout=900)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        input_path = os.path.join(temp_dir, 'input.pdf')
+        output_path = os.path.join(temp_dir, 'output.pdf')
 
-        processing_status[task_id] = "done"
-        logging.info(f"OCR completed for task {task_id}")
+        file.save(input_path)
 
-    except subprocess.TimeoutExpired:
-        processing_status[task_id] = "timeout"
-        logging.error(f"OCR timed out for task {task_id}")
+        # Run OCRmyPDF with --skip-text so it doesn't crash if text exists
+        try:
+            result = subprocess.run(
+                [
+                    'ocrmypdf',
+                    '--skip-text',  # Skip OCR on pages that already have text
+                    '--output-type', 'pdf',
+                    '--force-ocr',  # Optional: force re-OCR
+                    input_path,
+                    output_path
+                ],
+                capture_output=True,
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            # If OCR fails but output.pdf was still generated, return it
+            if os.path.exists(output_path):
+                return send_file(output_path, as_attachment=True, download_name='output.pdf')
+            else:
+                return jsonify({
+                    'error': 'OCR processing failed',
+                    'stderr': e.stderr.decode()
+                }), 500
 
-    except subprocess.CalledProcessError as e:
-        processing_status[task_id] = "error"
-        logging.error(f"OCR failed for task {task_id}: {e}")
-
+        # Ensure output was created
+        if os.path.exists(output_path):
+            return send_file(output_path, as_attachment=True, download_name='output.pdf')
+        else:
+            return jsonify({'error': 'Output PDF was not generated'}), 500
 
 
 
