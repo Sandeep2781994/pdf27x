@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash, render_template, jsonify
-from pdf_tools import merge_pdf, pdf_to_word, extract_pages, rotate_pdf, ocr_pdf, add_bookmark_to_pdf
-import os, ocrmypdf, io, tempfile, subprocess
-from PyPDF2 import PdfReader, PdfWriter
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify
+from pdf_tools import merge_pdf, pdf_to_word, extract_pages, rotate_pdf, add_bookmark_to_pdf
+import os
+import io
+import tempfile
+import subprocess
 import uuid
 from threading import Thread
-import logging
 
+from PyPDF2 import PdfReader, PdfWriter
 
 UPLOAD_FOLDER = "uploads"
 OUTPUT_FOLDER = "outputs"
@@ -29,25 +31,25 @@ def merge():
     merged_pdf = merge_pdf(files)
     return send_file(merged_pdf, as_attachment=True, mimetype='application/pdf', download_name='merged.pdf')
 
+
 @app.route('/convert', methods=['POST'])
 def convert():
     if 'file' not in request.files:
         flash("No file part")
         return redirect(url_for('index'))
-    
+
     file = request.files['file']
     if file.filename == '':
         flash("No selected file")
         return redirect(url_for('index'))
 
-    if file:
-        pdf_path = os.path.join('/tmp', file.filename)
-        file.save(pdf_path)
+    pdf_path = os.path.join('/tmp', file.filename)
+    file.save(pdf_path)
+    word_path = os.path.join('/tmp', file.filename.rsplit('.', 1)[0] + '.docx')
+    pdf_to_word(pdf_path, word_path)
 
-        word_path = os.path.join('/tmp', file.filename.rsplit('.', 1)[0] + '.docx')
-        pdf_to_word(pdf_path, word_path)
+    return send_file(word_path, as_attachment=True, download_name=os.path.basename(word_path))
 
-        return send_file(word_path, as_attachment=True, download_name=os.path.basename(word_path))
 
 @app.route('/extract', methods=['POST'])
 def extract():
@@ -57,12 +59,13 @@ def extract():
     extracted_pdf = extract_pages(file, start_page, end_page)
     return send_file(extracted_pdf, as_attachment=True, mimetype='application/pdf', download_name='extracted.pdf')
 
+
 @app.route('/rotate', methods=['POST'])
 def rotate():
     file = request.files['file']
     rotation_angle = int(request.form['rotation_angle'])
     pages = request.form.get('pages', '')
-    
+
     try:
         if pages:
             pages = list(map(int, pages.split(',')))
@@ -76,7 +79,15 @@ def rotate():
     return send_file(rotated_pdf, as_attachment=True, mimetype='application/pdf', download_name='rotated.pdf')
 
 
-# Compress PDF
+# PDF Compression
+
+PDF_SETTINGS = {
+    "screen": "/screen",
+    "ebook": "/ebook",
+    "printer": "/printer",
+    "prepress": "/prepress",
+    "default": "/default"
+}
 
 @app.route("/compress_pdf", methods=["GET", "POST"])
 def compress_pdf():
@@ -91,12 +102,10 @@ def compress_pdf():
         compression_level = request.form.get("compression_level", "ebook")
         pdf_setting = PDF_SETTINGS.get(compression_level, "/ebook")
 
-        input_filename = file.filename
-        input_filepath = os.path.join(UPLOAD_FOLDER, input_filename)
+        input_filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(input_filepath)
 
-        compressed_filename = "compressed_" + input_filename
-        output_filepath = os.path.join(UPLOAD_FOLDER, compressed_filename)
+        output_filepath = os.path.join(UPLOAD_FOLDER, f"compressed_{file.filename}")
 
         gs_command = [
             "gs",
@@ -122,21 +131,12 @@ def compress_pdf():
     return render_template("index.html")
 
 
-
-
-
 # OCR Processing
 
-import os
-import tempfile
-import shutil
-from flask import Flask, request, send_file, jsonify
-import subprocess
-
-app = Flask(__name__)
+processing_status = {}
 
 @app.route('/ocr', methods=['POST'])
-def ocr_pdf():
+def ocr_handler():
     file = request.files['pdf']
     if not file:
         return jsonify({'error': 'No PDF uploaded'}), 400
@@ -147,14 +147,13 @@ def ocr_pdf():
 
         file.save(input_path)
 
-        # Run OCRmyPDF with --skip-text so it doesn't crash if text exists
         try:
-            result = subprocess.run(
+            subprocess.run(
                 [
                     'ocrmypdf',
-                    '--skip-text',  # Skip OCR on pages that already have text
+                    '--skip-text',
                     '--output-type', 'pdf',
-                    '--force-ocr',  # Optional: force re-OCR
+                    '--force-ocr',
                     input_path,
                     output_path
                 ],
@@ -162,23 +161,31 @@ def ocr_pdf():
                 check=True
             )
         except subprocess.CalledProcessError as e:
-            # If OCR fails but output.pdf was still generated, return it
             if os.path.exists(output_path):
                 return send_file(output_path, as_attachment=True, download_name='output.pdf')
-            else:
-                return jsonify({
-                    'error': 'OCR processing failed',
-                    'stderr': e.stderr.decode()
-                }), 500
+            return jsonify({'error': 'OCR processing failed', 'stderr': e.stderr.decode()}), 500
 
-        # Ensure output was created
         if os.path.exists(output_path):
             return send_file(output_path, as_attachment=True, download_name='output.pdf')
-        else:
-            return jsonify({'error': 'Output PDF was not generated'}), 500
+        return jsonify({'error': 'Output PDF was not generated'}), 500
 
 
-
+def run_ocr(input_path, output_path, task_id):
+    try:
+        subprocess.run(
+            [
+                'ocrmypdf',
+                '--skip-text',
+                '--output-type', 'pdf',
+                '--force-ocr',
+                input_path,
+                output_path
+            ],
+            check=True
+        )
+        processing_status[task_id] = "completed"
+    except Exception as e:
+        processing_status[task_id] = f"failed: {str(e)}"
 
 
 @app.route("/process", methods=["POST"])
@@ -196,10 +203,12 @@ def process_file():
         return jsonify({"task_id": task_id})
     return jsonify({"error": "No file uploaded"}), 400
 
+
 @app.route("/status/<task_id>")
 def status(task_id):
     status = processing_status.get(task_id, "unknown")
     return jsonify({"status": status})
+
 
 @app.route("/download/<task_id>")
 def download(task_id):
