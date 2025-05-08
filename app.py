@@ -177,7 +177,7 @@ def run_ocr(input_path, output_path, task_id):
                 'ocrmypdf',
                 '--skip-text',
                 '--output-type', 'pdf',
-                '--force-ocr',
+                #'--force-ocr',
                 input_path,
                 output_path
             ],
