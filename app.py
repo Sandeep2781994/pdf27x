@@ -153,7 +153,7 @@ def ocr_handler():
                     'ocrmypdf',
                     '--skip-text',
                     '--output-type', 'pdf',
-                    '--force-ocr',
+                    #'--force-ocr',
                     input_path,
                     output_path
                 ],
