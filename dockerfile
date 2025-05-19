@@ -1,9 +1,10 @@
 # Base image with Python
 FROM python:3.10-slim
 
-# Install build dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
+    tesseract-ocr-eng \  # Add English language data
     poppler-utils \
     unpaper \
     wget \
@@ -11,27 +12,17 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     zlib1g-dev \
+    ghostscript \  # Install ghostscript from package manager
     && rm -rf /var/lib/apt/lists/*
 
-# Install Ghostscript 10.03.0 from source
-RUN wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10030/ghostscript-10.03.0.tar.gz && \
-    tar -xvzf ghostscript-10.03.0.tar.gz && \
-    cd ghostscript-10.03.0 && \
-    ./configure && \
-    make && make install && \
-    cd .. && rm -rf ghostscript-10.03.0*
+# Remove manual Ghostscript build and use packaged version
+# (The package manager version is more likely to work with system libraries)
 
-# Set the working directory in the container
 WORKDIR /app
-
-# Copy app files to the container
 COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements-new.txt
+# Install Python dependencies including ocrmypdf
+RUN pip install --no-cache-dir -r requirements-new.txt ocrmypdf
 
-# Expose Flask port
 EXPOSE 5000
-
-# Run with Gunicorn (production ready)
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
