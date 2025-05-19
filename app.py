@@ -144,30 +144,35 @@ def ocr_handler():
     with tempfile.TemporaryDirectory() as temp_dir:
         input_path = os.path.join(temp_dir, 'input.pdf')
         output_path = os.path.join(temp_dir, 'output.pdf')
-
         file.save(input_path)
 
         try:
-            subprocess.run(
+            result = subprocess.run(
                 [
                     'ocrmypdf',
                     '--skip-text',
                     '--output-type', 'pdf',
-                    #'--force-ocr',
                     input_path,
                     output_path
                 ],
                 capture_output=True,
+                text=True,
                 check=True
             )
         except subprocess.CalledProcessError as e:
-            if os.path.exists(output_path):
-                return send_file(output_path, as_attachment=True, download_name='output.pdf')
-            return jsonify({'error': 'OCR processing failed', 'stderr': e.stderr.decode()}), 500
+            # Log full error details
+            print(f"OCR Error: {e.stderr}")
+            print(f"OCR Output: {e.stdout}")
+            return jsonify({
+                'error': 'OCR processing failed',
+                'stderr': e.stderr,
+                'stdout': e.stdout
+            }), 500
 
         if os.path.exists(output_path):
             return send_file(output_path, as_attachment=True, download_name='output.pdf')
         return jsonify({'error': 'Output PDF was not generated'}), 500
+        
 
 
 def run_ocr(input_path, output_path, task_id):
