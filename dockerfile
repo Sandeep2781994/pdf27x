@@ -4,7 +4,7 @@ FROM python:3.10-slim
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    tesseract-ocr-eng \  # Add English language data
+    tesseract-ocr-eng \
     poppler-utils \
     unpaper \
     wget \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     zlib1g-dev \
-    ghostscript \  # Install ghostscript from package manager
+    ghostscript \
     && rm -rf /var/lib/apt/lists/*
 
 # Remove manual Ghostscript build and use packaged version
