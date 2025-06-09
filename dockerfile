@@ -1,19 +1,20 @@
-# Use Python 3.9 (stable with Tesseract)
-FROM python:3.9
+FROM python:3.9-slim
 
-# Install Tesseract-OCR and dependencies
+# Install system dependencies (including Tesseract and Poppler for pdf2image)
 RUN apt-get update && \
-    apt-get install -y tesseract-ocr && \
-    apt-get clean
+    apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-eng \  # For English language (add others like 'tesseract-ocr-fra' for French)
+    poppler-utils \      # Required for pdf2image
+    libmagic1 \          # For file type detection
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy files
-COPY . .
-
-# Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the app with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT:-5000}", "app:app"]
+COPY . .
+
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "4", "app:app"]
