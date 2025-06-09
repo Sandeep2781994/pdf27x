@@ -13,6 +13,10 @@ from docx import Document
 from PyPDF2 import PdfReader
 
 
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'  # Docker path
+
+
+
 def merge_pdf(files):
     merged_pdf = PdfWriter()
     for file in files:
@@ -28,28 +32,30 @@ def merge_pdf(files):
 
 
 def pdf_to_word(pdf_path, word_path):
-    # Create a temporary directory to store the OCR result
-    with tempfile.TemporaryDirectory() as temp_dir:
-        # Perform OCR on the PDF
-        ocr_pdf_path = os.path.join(temp_dir, "ocr_output.pdf")
-        ocrmypdf.ocr(pdf_path, ocr_pdf_path, force_ocr=True)
-        
-        # Read the OCR'd PDF
-        reader = PdfReader(ocr_pdf_path)
-        text_content = []
-        
-        for page in reader.pages:
-            text_content.append(page.extract_text())
-        
-        # Create a Word document
-        doc = Document()
-        
-        for page_text in text_content:
-            doc.add_paragraph(page_text)
-        
-        # Save the Word document
-        doc.save(word_path)
-
+    try:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            ocr_pdf_path = os.path.join(temp_dir, "ocr_output.pdf")
+            
+            # Add language support if needed (e.g., '--language eng+fra')
+            ocrmypdf.ocr(
+                input_file=pdf_path,
+                output_file=ocr_pdf_path,
+                force_ocr=True,
+                optimize=1
+            )
+            
+            reader = PdfReader(ocr_pdf_path)
+            doc = Document()
+            
+            for page in reader.pages:
+                if text := page.extract_text():
+                    doc.add_paragraph(text)
+            
+            doc.save(word_path)
+            return True
+    except Exception as e:
+        print(f"Error in pdf_to_word: {str(e)}")
+        return False
 
 
 
@@ -85,20 +91,13 @@ def rotate_pdf(file, rotation_angle, pages=None):
 
 
 def ocr_pdf(file):
-    # Convert PDF pages to images
-    images = convert_from_path(file)
-
-    # Perform OCR on each image and extract text
-    extracted_text = []
-    for img in images:
-        text = pytesseract.image_to_string(img)
-        extracted_text.append(text)
-
-    # Combine extracted text from all pages
-    combined_text = '\n'.join(extracted_text)
-
-    return combined_text
-
+    try:
+        # Use dpi=300 for better OCR accuracy
+        images = convert_from_path(file, dpi=300)
+        return '\n'.join(pytesseract.image_to_string(img) for img in images)
+    except Exception as e:
+        print(f"OCR Error: {str(e)}")
+        return None
 
 
 
