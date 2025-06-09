@@ -1,20 +1,15 @@
 FROM python:3.9-slim
 
-# Install system dependencies (including Tesseract and Poppler for pdf2image)
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y \
     tesseract-ocr \
-    tesseract-ocr-eng \  # For English language (add others like 'tesseract-ocr-fra' for French)
-    poppler-utils \      # Required for pdf2image
-    libmagic1 \          # For file type detection
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    tesseract-ocr-eng \  # English language pack
+    poppler-utils \     # Required for pdf2image
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
+RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "4", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "app:app"]
